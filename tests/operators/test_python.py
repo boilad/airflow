@@ -317,6 +317,15 @@ class TestPythonOperator(TestPythonBase):
         )
         python_operator.run(start_date=DEFAULT_DATE, end_date=DEFAULT_DATE)
 
+    def test_execute_return(self):
+        def f():
+            return 'execute_return'
+
+        return_value = f()
+
+        task = PythonOperator(task_id='task', python_callable=f, dag=self.dag)
+        assert task.execute({}) == return_value
+
 
 class TestAirflowTaskDecorator(TestPythonBase):
     def test_python_operator_python_callable_is_callable(self):
@@ -1422,6 +1431,15 @@ class TestPythonVirtualenvOperator(unittest.TestCase):
             pass
 
         self._run_as_operator(f, use_dill=True, system_site_packages=False, requirements=None)
+
+    def test_execute_return(self):
+        def f():
+            return 'execute_return'
+
+        return_value = f()
+
+        task = PythonVirtualenvOperator(task_id='task', python_callable=f, dag=self.dag)
+        assert task.execute({}) == return_value
 
 
 DEFAULT_ARGS = {
